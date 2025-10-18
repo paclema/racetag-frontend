@@ -2,6 +2,8 @@
 
 A tiny static web UI to visualize live race standings from the backend API. It fetches an initial snapshot and listens to server-sent events (SSE) for real-time updates.
 
+![alt text](<docs/Screenshot 2025-10-18 210334.png>)
+
 Features:
 - Connect to a backend (default http://localhost:8000)
 - Show current standings
