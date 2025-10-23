@@ -6,6 +6,14 @@ const state = {
   standingsByTag: new Map(),
 };
 
+// Mapeo de tag_id a número de bib (race number)
+const tagToBib = {
+  '000000000000000001B541C0': '6064',
+  'C5A1BE1B694E02089950CE2217F46FBA': '3420',
+  'EE6B4AADB6F002FC353CE1BFD8D3C3DF': '3476',
+  '281C5AACBA0E0283B93B419B55EB5407': '24859'
+};
+
 function setStatus(text) {
   $('#status').textContent = text;
 }
@@ -20,11 +28,13 @@ function renderStandings(items) {
   tbody.innerHTML = '';
   items.forEach((p, idx) => {
     const gap = typeof p.gap_ms === 'number' ? formatMs(p.gap_ms) : '';
+    const bib = tagToBib[p.tag_id] || 'N/A';
     const tr = document.createElement('tr');
     const total = typeof p.total_time_ms === 'number' ? secondsWithMs(p.total_time_ms) : '';
     tr.innerHTML = `
       <td>${idx + 1}</td>
       <td>${p.tag_id}</td>
+      <td>${bib}</td>
       <td>${p.laps}</td>
       <td class="${p.finished ? 'finished' : ''}">${p.finished ? 'Yes' : 'No'}</td>
       <td>${p.last_pass_time || ''}</td>
