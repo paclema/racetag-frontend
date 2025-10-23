@@ -1,7 +1,7 @@
 const $ = (sel) => document.querySelector(sel);
 
 const state = {
-  backend: localStorage.getItem('racetag.backend') || 'http://localhost:8000',
+  backend: localStorage.getItem('racetag.backend') || 'http://localhost:8600',
   es: null,
   standingsByTag: new Map(),
 };

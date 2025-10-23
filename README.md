@@ -5,7 +5,7 @@ A tiny static web UI to test and visualize live race standings from the [racetag
 ![alt text](<docs/Screenshot 2025-10-18 210334.png>)
 
 Features:
-- Connect to a backend (default http://localhost:8000)
+- Connect to a backend (default http://localhost:8600)
 - Show current standings
 - Live updates via SSE (/stream)
 
@@ -14,10 +14,10 @@ Features:
 Using the included python server:
 
 ```bash
-python3 serve.py --host 127.0.0.1 --port 8080
+python3 serve.py --host 127.0.0.1 --port 8680
 ```
 
-Open http://localhost:8080 and click “Connect” (or it will auto-connect if the backend is reachable).The app stores the backend URL in localStorage.
+Open http://localhost:8680 and click “Connect” (or it will auto-connect if the backend is reachable).The app stores the backend URL in localStorage.
 
 ## Docker
 
@@ -30,13 +30,13 @@ docker build -t racetag-frontend .
 Run it:
 
 ```bash
-docker run --rm -p 8080:80 racetag-frontend
+docker run --rm -p 8680:80 racetag-frontend
 ```
 
-Open http://localhost:8080.
+Open http://localhost:8680.
 
 Notes:
-- Backend must be reachable from the browser at the URL you configure (default http://localhost:8000).
+- Backend must be reachable from the browser at the URL you configure (default http://localhost:8600).
 - Backend CORS should allow the frontend origin (the backend in this repo is configured permissively for development).
 
 ## Developer notes
