@@ -1,7 +1,17 @@
 const $ = (sel) => document.querySelector(sel);
 
+// API key injected at runtime by Docker (placeholder replaced on container start)
+const __RACETAG_API_KEY__ = "__RACETAG_FRONTEND_API_KEY__";
+// Backend URL injected at runtime by Docker (placeholder replaced on container start)
+const __RACETAG_BACKEND_URL__ = "__RACETAG_FRONTEND_BACKEND_URL__";
+
+const isPlaceholder = (v) => typeof v === 'string' && v.startsWith('__RACETAG_');
+
 const state = {
-  backend: localStorage.getItem('racetag.backend') || 'http://localhost:8600',
+  backend:
+    ( localStorage.getItem('racetag.backend') 
+    || !isPlaceholder(__RACETAG_BACKEND_URL__) && __RACETAG_BACKEND_URL__)
+    || 'http://localhost:8600',
   es: null,
   standingsByTag: new Map(),
 };
@@ -63,7 +73,8 @@ function secondsWithMs(ms) {
 
 async function loadSnapshot() {
   const url = `${state.backend}/classification`;
-  const res = await fetch(url);
+  const headers = getApiHeaders();
+  const res = await fetch(url, { headers });
   if (!res.ok) throw new Error(`GET /classification failed: ${res.status}`);
   const data = await res.json();
   renderStandings(data.standings || []);
@@ -72,20 +83,20 @@ async function loadSnapshot() {
 function connectSSE() {
   const url = `${state.backend}/stream`;
   if (state.es) state.es.close();
-  const es = new EventSource(url);
-  state.es = es;
-  es.onopen = () => setStatus('Connected');
-  es.onerror = () => setStatus('Connection error');
-  es.onmessage = (ev) => {
-    try {
-      const data = JSON.parse(ev.data);
-      if (data?.type === 'standings') {
-        renderStandings(data.items || []);
+  state.es = connectSSEWithHeaders(url, getApiHeaders(), {
+    onOpen: () => setStatus('Connected'),
+    onError: () => setStatus('Connection error'),
+    onMessage: (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        if (data?.type === 'standings') {
+          renderStandings(data.items || []);
+        }
+      } catch {
+        // ignore non-JSON payloads
       }
-    } catch {
-      // ignore non-JSON payloads
-    }
-  };
+    },
+  });
 }
 
 function init() {
