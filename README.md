@@ -39,6 +39,13 @@ Notes:
 - Backend must be reachable from the browser at the URL you configure (default http://localhost:8600).
 - Backend CORS should allow the frontend origin (the backend in this repo is configured permissively for development).
 
+## Docker Compose
+Build and run using Docker Compose:
+
+```bash
+docker compose up -d --build
+```
+
 ## Developer notes
 
 - The UI listens to SSE payloads of type "standings" and re-renders the table upon receiving them.

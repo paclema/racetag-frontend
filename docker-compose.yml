@@ -1,0 +1,7 @@
+services:
+  racetag-frontend:
+    image: racetag-frontend:latest
+    container_name: racetag-frontend
+    ports:
+      - "${RACETAG_FRONTEND_PORT:-8680}:80"
+    restart: unless-stopped
